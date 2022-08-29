@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 
+    I just realized that this is the highest voted 
+Project: Recipe Book till date, thanks for the support guys :D 
+    -->
+    <!-- 
+    Nickname: Neon Byte(@NeonByteKA)
+    Current Bracket: Intermediate
+    Current Competition: Gears, animations and simulations
+    -->
+    <!-- 
+	Credit to Bluebird(@birdwatcher03) for the awesome save  
+	function used to get a better thumbnail 
+	Credit to delish.com for the recipes.
+	Credit to wikimedia commons for all the images.
+    -->
+    <!--
+    FEATURES(Please read this first)
+    - Pages can be navigated either by the arrow buttons or the   dot thingies at the bottom.
+    - You can go to the specific recipe by clicking on an item in       the table of contents.
+    - Try clicking on any image to see it enlarged, once enlarged it can be closed by clicking either on the close button or anywhere on the background.
+    - Animations are there for page change and image pop-ups
+    - Nice page designs? Maybe.. :P
+    - There is a hidden easter egg(somewhat) in the program, try to find it and tell me in the T&T.
+    --> 
+	<title>Tasty Bytes</title>
+	<meta charset="utf-8" />
+	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Product+Sans|Google+Sans+Display" rel="stylesheet" />
+	<style>
+        :root {
+        	--first-font: "Product Sans", sans-serif;
+        	--second-font: "Josefin Sans";
+        }
+        body {
+            background: url(https://upload.wikimedia.org/wikipedia/en/thumb/3/3d/MountainAshFloor.jpg/1024px-MountainAshFloor.jpg);
+            background-size: cover;
+        	overflow: hidden;
+        }
+        .page {
+        	margin: 25px auto 0 auto;
+        	height: 550px;
+        	width: 450px;
+        	box-shadow: -5px -5px 15px #444 !important;
+        	-webkit-animation: fade 1.2s;
+        	animation: fade 1.3s;
+        	background-color: rgb(217, 202, 182);
+        }
+        @keyframes fade {
+        	/* Fading effect(goes from invisible to visible) */
+        	from {
+        	    opacity: 0;
+        	}
+        	to {
+        		opacity: 1;
+        	}
+        }
+        @-webkit-keyframes fade {
+            /* For Safari */
+        	from {
+        		opacity: 0;
+        	}
+        	to {
+        		opacity: 1;
+        	}
+        }
+        .page:first-child {
+        	text-align: center;
+            background: url(https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Desserts.jpg/1200px-Desserts.jpg);
+            background-size: cover;
+        }
+        .page:first-child .bookInfo {
+        	display: inline-block;
+        	margin: 0 auto;
+        	margin-top: 90px;
+        	width: 200px;
+        	height: 325px;
+        	background-color: #ffffff;
+        }
+        .page:first-child .bookInfo h1 {
+        	text-align: center;
+        	padding-left: 10px;
+        	font-size: 2.5rem;
+        	font-family: "Product Sans";
+        	text-transform: uppercase;
+        	letter-spacing: 10px;
+        	margin-bottom: 0px;
+        }
+        .page:first-child .bookInfo hr {
+        	margin-top: 13px;
+        	width: 40px;
+        	border: 1px solid black;
+        }
+        .page:first-child .bookInfo h3 {
+        	margin-top: 20px;
+        	margin-bottom: 15px;
+        	font-family: var(--first-font);
+        	text-transform: uppercase;
+        	font-weight: bold;
+        	font-size: 1.5rem;
+        	padding-left: 10px;
+        	padding-right: 10px;
+        }
+        .page:first-child .bookInfo p {
+        	font-family: var(--first-font);
+        	margin-top: 13px;
+        	padding-left: 12px;
+        	padding-right: 12px;
+        	font-size: 1.4rem;
+        	font-weight: bold;
+        }
+        .page:first-child #author {
+        	font-size: 1.7rem;
+        	font-family: var(--first-font);
+        	color: white;
+        }
+        .page:first-child #bestseller {
+        	cursor: default;
+        	background: white;
+        	height: 80px;
+        	width: 94px;
+        	border-radius: 50%;
+        	padding-top: 15px;
+        	margin-left: 340px;
+        	color: #333;
+        	font-family: var(--first-font);
+        }
+        .page:first-child #bestseller #bestsellerOverlay {
+        	position: absolute;
+        	margin-top: -72px;
+        	height: 76px;
+        	width: 94px;
+        	border-radius: 50%;
+        	padding-top: 19px;
+        	opacity: 0;
+        	transition: 500ms ease;
+        	background-color: white;
+        }
+        .page:first-child #bestseller:hover #bestsellerOverlay {
+        	opacity: 1;
+        }
+        .page.index {
+        	color: rgb(34, 34, 34);
+        }
+        .page.index h1 {
+        	padding-top: 20px;
+        	font-family: var(--first-font);
+        	font-size: 1.8rem;
+        	letter-spacing: 5px;
+        	margin-left: auto;
+        	margin-right: auto;
+        	line-height: 50px;
+        	text-transform: uppercase;
+        	width: fit-content;
+        	box-shadow: 0px 5px rgb(34, 34, 34);
+        }
+        .page.index .content-container {
+        	display: flex;
+        	flex-direction: row;
+        	flex-wrap: wrap;
+        	margin-top: 50px;
+        	margin-left: 55px;
+        	margin-right: 55px;
+        	height: 350px;
+        }
+        .page.index .content-container .content {
+        	border: none;
+        	background-color: inherit;
+        	outline: none;
+        	width: 50%;
+        	height: 50%;
+        	transition: 0.3s ease;
+        	cursor: pointer;
+        }
+        .page.index .content-container .content:hover {
+        	transition: 0.6s ease;
+        	box-shadow: 2px 2px 20px #999;
+        	transform: scale(1.1);
+        }
+        .page.index .content-container .content h2 {
+        	margin: 0;
+        	border: none;
+        	outline: none;
+        	font-family: var(--first-font);
+        	font-size: 4rem;
+        	width: 70%;
+        	text-align: center;
+        	margin-left: auto;
+        	margin-right: auto;
+        }
+        .page.index .content-container .content p {
+        	font-family: var(--second-font);
+        	font-size: 1.4rem;
+        	margin-left: 10px;
+        	margin-right: 10px;
+        	text-align: center;
+        }
+        .page.index .content-container .content hr {
+        	margin-top: 13px;
+        	width: 75%;
+        	border: 3px solid black;
+        }
+        .page.about {
+        	text-align: center;
+        }
+        .page.about img {
+        	margin-top: 40px;
+        	width: 200px;
+        }
+        .page.about h3 {
+        	font-family: var(--first-font);
+        }
+        .page.about hr {
+        	margin-top: 13px;
+        	width: 150px;
+        	border: 1px solid black;
+        }
+        .page.about p {
+        	text-align: left;
+        	font-family: var(--second-font);
+        	line-height: 20px;
+        	margin-left: 40px;
+        	margin-right: 40px;
+        }
+        .page.about .link {
+        	display: inline-block;
+        	color: #3977cb;
+        	text-decoration: none;
+        	position: relative;
+        }
+        .page.about .link::after {
+        	content: "";
+        	margin-top: -3px;
+        	width: 0px;
+        	height: 2px;
+        	display: block;
+        	background: #3977cb;
+        	transition: 300ms;
+        	width: 100%;
+        	transform: scaleX(0);
+        }
+        .page.about .link:hover::after {
+        	transform: scaleX(1);
+        }
+        .page.recipe h1 {
+        	font-family: var(--first-font);
+        	text-align: center;
+        	padding-top: 10px;
+        }
+        .page.recipe .table1 {
+        	margin-top: -20px;
+        	text-align: center;
+        	margin-left: auto;
+        	margin-right: auto;
+        }
+        .detailTitle {
+        	font-family: var(--first-font);
+        	text-transform: uppercase;
+        	font-weight: bold;
+        	line-height: 28px;
+        }
+        .number {
+        	font-family: var(--second-font);
+        	color: #3977cb;
+        	font-weight: bold;
+        	font-size: 1.2rem;
+        	padding: 0 2px 0 2px;
+        	margin-top: 20px;
+        }
+        .time {
+        	font-family: var(--second-font);
+        	color: #333;
+        	text-transform: uppercase;
+        	font-size: 0.65rem;
+        }
+        .page.recipe .pageContainer {
+        	display: flex;
+        	flex-direction: row;
+        	flex-wrap: wrap;
+        }
+        .page.recipe .pageContainer .ingredients {
+        	width: 41%;
+        }
+        .page.recipe .pageContainer .ingredients h2 {
+        	font-family: var(--first-font);
+        	padding-left: 10px;
+        	margin-top: -5px;
+        }
+        .page.recipe .pageContainer .ingredients ul {
+        	padding-left: 30px;
+        	margin-top: -10px;
+        	font-family: var(--second-font);
+        	font-size: 0.95rem;
+        }
+        .page.recipe .pageContainer .ingredients ul li {
+        	line-height: 18px;
+        }
+        .page.recipe .pageContainer .directions {
+        	width: 59%;
+        }
+        .page.recipe .pageContainer .directions h2 {
+        	font-family: var(--first-font);
+        	padding-left: 20px;
+        	margin-top: -5px;
+        }
+        .page.recipe .pageContainer .directions ol {
+        	list-style-type: none;
+        	padding-left: 20px;
+        	margin-top: -13px;
+        	font-family: var(--second-font);
+        	font-size: 0.95rem;
+        }
+        .page.recipe .pageContainer .directions ol li {
+        	line-height: 16px;
+        	margin-top: -13px;
+        }
+        .stepNumber{
+        	display: inline-block;
+        	border-right: 3px solid #3977cb;
+        	width: 7px;
+        	height: 15px;
+        	font-family: "Josefin Sans";
+        	padding-right: 4px;
+        	margin-right: 4px;
+        	font-size: 1rem;
+        }
+        .page.recipe .pageContainer .directions ol li p {
+        	padding-left: 20px;
+        	margin-top: -16px;
+        }
+        .page.back {
+        	background: url(https://upload.wikimedia.org/wikipedia/commons/6/67/D%C3%A9lices_de_Paris.jpg);
+            background-size: cover;
+        }
+        .page.back .blurb {
+            display: inline-block;
+            background: white;
+            font-family: var(--first-font);
+            margin-top: 42%;
+            margin-left: 10%;
+            margin-right: 10%;
+            padding: 0 20px 0 20px;
+        }
+        .page.back footer {
+            position: absolute;
+            color: white;
+            width: 100%;
+            font-size: 1.2rem;
+            top: 545px;
+            left: 0px;
+            text-align: center;
+        }
+        footer {
+        	position: absolute;
+        	font-family: var(--second-font);
+        	top: 550px;
+        	left: 50%;
+        	right: 50%;
+        }
+        .pagePrev,
+        .pageNext {
+        	position: fixed;
+        	color: white;
+        	text-align: center;
+        	width: 20px;
+        	top: 260px;
+        	font-weight: bold;
+        	font-size: 25px;
+        	-webkit-transition: 0.6s ease;
+        	transition: 0.6s ease;
+        	border-radius: 0 3px 3px 0;
+        	padding: 20px;
+        	cursor: pointer;
+        }
+        .pageNext {
+        	right: 0px;
+        	border-radius: 3px 0 0 3px;
+        }
+        .pagePrev {
+        	left: 0px;
+        	border-radius: 0 3px 3px 0;
+        }
+        .pagePrev:hover,
+        .pageNext:hover {
+        	background-color: rgba(0, 0, 0, 0.9);
+        }
+        .dot {
+        	cursor: pointer;
+        	height: 10px;
+        	width: 10px;
+        	margin-top: 7px;
+        	background-color: #bbb;
+        	border-radius: 50%;
+        	display: inline-block;
+        	-webkit-transition: background-color 0.6s ease;
+        	transition: background-color 0.6s ease;
+        }
+        .dot:hover {
+        	background-color: #000;
+        }
+        .dot.active {
+        	pointer-events: none;
+        	background-color: #333;
+        }
+        /** Image popup CSS  */
+        .modalImages:hover {
+        	cursor: pointer;
+        	transform: scale(1.1);
+        }
+        .modal {
+        	display: none;
+        	position: fixed;
+        	margin-left: 50px;
+        	z-index: 1;
+        	top: 140px;
+        	width: 500px;
+        	overflow: auto;
+        }
+        .modal-content {
+        	display: block;
+        	width: 500px;
+        	-webkit-animation: zoom 300ms;
+        	animation: zoom 300ms;
+        }
+        #overlay {
+        	position: fixed;
+        	opacity: 0;
+        	-webkit-transition: 200ms ease-in-out;
+        	transition: 200ms ease-in-out;
+        	top: 0;
+        	left: 0;
+        	right: 0;
+        	bottom: 0;
+        	background-color: rgba(0, 0, 0, 0.8);
+        	pointer-events: none;
+        }
+        #overlay.active {
+        	opacity: 1;
+        	pointer-events: all;
+        }
+        @-webkit-keyframes zoom {
+        	from {
+        		-webkit-transform: scale(0);
+        		transform: scale(0);
+        	}
+        	to {
+        		-webkit-transform: scale(1);
+        		transform: scale(1);
+        	}
+        }
+        @keyframes zoom {
+        	from {
+        		-webkit-transform: scale(0);
+        		transform: scale(0);
+        	}
+        	to {
+        		-webkit-transform: scale(1);
+        		transform: scale(1);
+        	}
+        }
+        .close {
+        	background: none;
+        	border: none;
+        	outline: none;
+        	position: fixed;
+        	top: 15px;
+        	right: 35px;
+        	color: #f1f1f1;
+        	font-size: 40px;
+        	font-weight: bold;
+        	-webkit-transition: 0.3s;
+        	transition: 0.3s;
+        }
+        .close:hover,
+        .close:focus {
+        	color: #bbb;
+        	text-decoration: none;
+        	cursor: pointer;
+        }
+	</style>
+</head>
+<body>
+	<div class="page">
+		<div id="author">Neon Byte</div>
+		<div class="bookInfo">
+			<h1>Tasty Bytes</h1>
+			<hr />
+			<h3>A cookbook for desserts</h3>
+			<hr />
+			<p>Bake the world a better place</p>
+		</div>
+		<div id="bestseller"> <em>New York</em> Times <span style="box-shadow: 0px 3px #555555">bestseller</span>
+			<div id="bestsellerOverlay">Like every other book on earth</div>
+		</div> 
+		<a title="About the author" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page about">
+		<img src="https://www.kasandbox.org/programming-images/avatars/aqualine-tree.png" />
+		<hr />
+		<h3>About the author</h3>
+		<hr />
+		<p> <a class="link" href="https://www.khanacademy.org/profile/NeonByteKA/" target="_blank">Neon Byte</a>
+        is a teenage web developer who knows nothing about cooking. All the recipes here are taken from the internet. He is also the CEO of Neon Tours, a travel agency that nobody knows about(most probably 'cause it's fake). Even though he has been very successful, he stays humble and still thinks that his biggest achievement is waking up on Sunday without being reminded.
+      </p>
+      <footer>1</footer>
+      <a title="Cover page" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+	  <a title="Table of contents" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page index">
+		<h1>Table of Contents</h1>
+		<div class="content-container">
+			<button onclick="currentPage(4)" class="content">
+				<h2>03</h2>
+				<hr />
+				<p>Chocolate truffles</p>
+			</button>
+			<button onclick="currentPage(5)" class="content">
+				<h2>04</h2>
+				<hr />
+				<p>Nutella Pops</p>
+			</button>
+			<button onclick="currentPage(6)" class="content">
+				<h2>05</h2>
+				<hr />
+				<p>Swiss roll cake</p>
+			</button>
+			<button onclick="currentPage(7)" class="content">
+				<h2>06</h2>
+				<hr />
+				<p>Earthquake cake</p>
+			</button>
+		</div>
+		<footer>2</footer> 
+		<a title="About the author" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+		<a title="Chocolate truffles" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page recipe">
+		<h1>Chocolate truffles</h1>
+		<table class="table1" cellspacing="20px">
+			<tr class="desertDetails">
+				<td> <span class="detailTitle">Yields</span>
+					<br /> <span class="number">12</span>
+					<span class="time">servings</span>
+				</td>
+				<td> <span class="detailTitle">Prep Time</span>
+					<br /> <span class="number">0</span>
+					<span class="time">hours</span>
+					<span class="number">5</span>
+					<span class="time">minutes</span>
+				</td>
+				<td> <span class="detailTitle">Total time</span>
+					<br /> <span class="number">1</span>
+					<span class="time">hour</span>
+					<span class="number">5</span>
+					<span class="time">minutes</span>
+				</td>
+			</tr>
+		</table>
+		<div class="pageContainer">
+			<div class="ingredients">
+				<h2>Ingredients</h2>
+				<ul>
+					<li>1 (14 oz.) package Oreos</li>
+					<li>8 oz. cream cheese</li>
+					<li>1 tsp. pure vanilla extract</li>
+					<li>2 cups white chocolate chips, melted</li>
+					<li>1/2 cups semisweet chocolate chips, melted</li>
+				</ul>
+			</div>
+			<div class="directions">
+				<h2>Directions</h2>
+				<ol>
+					<li> <span class="stepNumber">1</span>
+						<p>Use a food processor to crush cookies into fine crumbs.</p>
+					</li>
+					<li> <span class="stepNumber">2</span>
+						<p>Add all but 2 tablespoons crushed cookies to a medium bowl. Add cream cheese and vanilla and stir until evenly combined.</p>
+					</li>
+					<li> <span class="stepNumber">3</span>
+						<p>Line a baking sheet with parchment paper. Using a small cookie scoop, form mixture into small balls. Place on prepared baking sheet and freeze until slightly hardened, about 30 minutes.</p>
+					</li>
+					<li> <span class="stepNumber">4</span>
+						<p>Dip the frozen balls in melted white chocolate until coated and return to baking sheet. Drizzle with semisweet chocolate. Freeze until chocolate hardens in about 15 minutes. Enjoy!</p>
+					</li>
+				</ol>
+			</div>
+		</div>
+		<img class="modalImages" style="
+          position: absolute;
+          top: 420px;
+          left: 100px;
+          transition: 0.6s all;
+        " src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Dolce_Pastries_Cake_Truffles.jpg" width="25%" />
+		<footer>3</footer>
+		<a title="Table of contents" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+		<a title="Nutella Pops" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page recipe">
+	    <h1>Nutella Pops</h1>
+		<table class="table1" cellspacing="20px">
+			<tr class="desertDetails">
+				<td> <span class="detailTitle">Yields</span>
+					<br /><span class="number">6</span><span class="time">servings</span>
+				</td>
+				<td> <span class="detailTitle">Prep Time</span>
+					<br /> <span class="number">0</span><span class="time">hours </span>
+					<span class="number">15</span><span class="time">minutes</span>
+				</td>
+				<td> <span class="detailTitle">Total time</span>
+					<br /> <span class="number">3</span><span class="time">hours </span><span class="number">15</span><span class="time">minutes</span>
+				</td>
+			</tr>
+		</table>
+		<div class="pageContainer">
+			<div class="ingredients">
+				<h2>Ingredients</h2>
+				<ul>
+					<li>1 c. Cool Whip</li>
+					<li>1/2 c. milk</li>
+					<li>1/4 c. Nutella</li>
+					<li>6 Dixie cups</li>
+					<li>A pairing knife</li>
+				</ul>
+			</div>
+			<div class="directions">
+				<h2>Directions</h2>
+				<ol>
+					<li> <span class="stepNumber">1</span>
+						<p>In a medium bowl, whisk together Cool Whip, milk, and Nutella until combined.</p>
+					</li>
+					<li> <span class="stepNumber">2</span>
+						<p>Pour mixture into six (3-ounce) Dixie Cups.</p>
+					</li>
+					<li> <span class="stepNumber">3</span>
+						<p>Top each with a small square of tin foil to cover cup. Using a paring knife, slice a small slit in the middle of each.</p>
+					</li>
+					<li> <span class="stepNumber">4</span>
+						<p>Place a wooden popsicle stick in each slit and freeze until firm, 3 hours.</p>
+					</li>
+					<li><span class="stepNumber">5</span>
+					    <p>When ready to serve, snip off a bit of the cup and peel off pop.</p>
+					</li>
+				</ol>
+			</div>
+		</div>
+		<img class="modalImages" style="
+          position: absolute;
+          top: 300px;
+          left: 100px;
+          transition: 0.6s all;
+        " src="https://upload.wikimedia.org/wikipedia/commons/1/10/Cake_pops_with_sprinkles_in_Adelaide%2C_March_2012.jpg" width="20%" />
+		<footer>4</footer>
+		<a title="Chocolate truffles" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+		<a title="Swiss roll cake" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page recipe">
+		<h1>Swiss roll cake</h1>
+		<table class="table1" cellspacing="20px">
+			<tr class="desertDetails">
+				<td> <span class="detailTitle">Yields</span>
+					<br /><span class="number">10-12</span><span class="time">servings</span>
+				</td>
+				<td> <span class="detailTitle">Prep Time</span>
+					<br /> <span class="number">0</span><span class="time">hours </span><span class="number">15</span><span class="time">minutes</span>
+				</td>
+				<td> <span class="detailTitle">Total time</span>
+					<br /> <span class="number">1</span><span class="time">hour </span><span class="number">15</span><span class="time">minutes</span>
+				</td>
+			</tr>
+		</table>
+		<div class="pageContainer">
+			<div class="ingredients">
+				<h2>Ingredients</h2>
+				<ul>
+					<li>Cooking spray</li>
+					<li>1 (15-oz.) box devil's food cake mix</li>
+					<li>1/2 cups (1 stick) butter, softened</li>
+					<li>1 cups powdered sugar</li>
+					<li>1 (7.5-oz.) jar marshmallow creme</li>
+					<li>1 1/2 c. chocolate chips</li>
+					<li>3/4 cups heavy cream</li>
+					<li>24 Swiss Rolls, sliced crosswise</li>
+				</ul>
+			</div>
+			<div class="directions">
+				<h2>Directions</h2>
+				<ol>
+					<li> <span class="stepNumber">1</span>
+						<p>In a large bowl using a hand mixer, beat butter, powdered sugar, marshmallow creme, and vanilla until smooth and fluffy.</p>
+					</li>
+					<li> <span class="stepNumber">2</span>
+						<p>Put chocolate chips in a large bowl. In a saucepan heat the cream until steaming and bubbles form around the edge. Pour over chocolate and let sit 5 minutes, then whisk until completely melted and combined.</p>
+					</li>
+					<li> <span class="stepNumber">3</span>
+						<p>Place one cake layer on a serving platter. Spread marshmallow filling over cake and top with second cake layer. Pour ganache over cake and spread it over the cake.</p>
+					</li>
+					<li> <span class="stepNumber">4</span>
+						<p>Apply Swiss Rolls in even rows around cake. Let set 30 minutes before slicing and serving. Enjoy!</p>
+					</li>
+				</ol>
+			</div>
+		</div>
+		<img class="modalImages" style="
+          position: absolute;
+          top: 420px;
+          left: 100px;
+          transition: 0.6s all;
+        " src="https://upload.wikimedia.org/wikipedia/commons/d/da/Sri_Lankan_Swiss_roll.jpg" width="25%" />
+		<footer>5</footer>
+		<a title="Nutella Pops" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+		<a title="Earthquake Cake" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page recipe">
+		<h1>Earthquake cake</h1>
+		<table class="table1" cellspacing="20px">
+			<tr class="desertDetails">
+				<td> <span class="detailTitle">Yields</span>
+					<br /><span class="number">10-12</span>
+					<span class="time">servings</span>
+				</td>
+				<td> <span class="detailTitle">Prep Time</span>
+					<br /> <span class="number">0</span><span class="time">hours </span>
+					<span class="number">15</span><span class="time">minutes</span>
+				</td>
+				<td> <span class="detailTitle">Total time</span>
+					<br /> <span class="number">1</span><span class="time">hour </span><span class="number">5</span><span class="time">minutes</span>
+				</td>
+			</tr>
+		</table>
+		<div class="pageContainer">
+			<div class="ingredients">
+				<h2>Ingredients</h2>
+				<ul>
+					<li>1 c. sweetened shredded coconut</li>
+					<li>1/2 c. chopped toasted pecans</li>
+					<li>1 box German chocolate cake mix</li>
+					<li>8 oz. cream cheese</li>
+					<li>1/2 c. butter, melted</li>
+					<li>2 1/2 c. powdered sugar</li>
+					<li>1 tsp. pure vanilla extract</li>
+					<li>kosher salt</li>
+					<li>2 c. chocolate chips</li>
+				</ul>
+			</div>
+			<div class="directions">
+				<h2>Directions</h2>
+				<ol>
+					<li> <span class="stepNumber">1</span>
+						<p>Preheat oven to 350° and grease a 9"-x-13” baking pan with cooking spray. Spread coconut and pecans on the bottom of the pan.</p>
+					</li>
+					<li> <span class="stepNumber">2</span>
+						<p>Prepare cake batter according to package directions, then pour on top of coconut and pecans.</p>
+					</li>
+					<li> <span class="stepNumber">3</span>
+						<p>In a large bowl, combine cream cheese, butter, powdered sugar, vanilla and a pinch of salt. Beat with a hand mixer until light and fluffy. Spread the mixture over the chocolate batter then sprinkle chocolate chips on top. Bake until a toothpick inserted into the middle of the cake comes out clean, about 50 minutes.</p>
+					</li>
+					<li> <span class="stepNumber">4</span>
+						<p>Serve warm with ice cream.</p>
+					</li>
+				</ol>
+			</div>
+		</div>
+		<img class="modalImages" style="
+          position: absolute;
+          top: 460px;
+          left: 100px;
+          transition: 0.6s all;
+        " src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Baumkuchenspitzen.JPG/240px-Baumkuchenspitzen.JPG" width="20%" />
+		<footer>6</footer> 
+		<a title="Swiss roll cake" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+		<a title="Back page" class="pageNext" onclick="plusPage(1)">&#10095;</a>
+	</div>
+	<div class="page back">
+	    <div class="blurb">
+	        <p>Tasty Bytes is the best cookbook about desserts you'll find. With amazing recipes and rave reviews it's no wonder that it has already established itself as one of the best cookbooks. It has everything you need to cook amazing post-dinner dessert, so what are you waiting for dive right in and bake your heart out(actually, don't do that).</p>
+	    </div>
+	    <footer>Copyright &#169; 2020 by Neon Byte</footer>
+	    <a title="Earthquake cake" class="pagePrev" onclick="plusPage(-1)">&#10094;</a>
+	</div>
+	<div style="text-align: center; cursor: pointer"> 
+	    <span title="Cover page" class="dot active" onclick="currentPage(1)"></span>
+		<span title="About the author" class="dot" onclick="currentPage(2)"></span>
+		<span title="Table of contents" class="dot" onclick="currentPage(3)"></span>
+		<span title="Chocolate truffles" class="dot" onclick="currentPage(4)"></span>
+		<span title="Nutella pops" class="dot" onclick="currentPage(5)"></span>
+		<span title="Swiss roll cake" class="dot" onclick="currentPage(6)"></span>
+		<span title="Earthquake cake" class="dot" onclick="currentPage(7)"></span>
+		<span title="Back page" class="dot" onclick="currentPage(8)"></span>
+	</div>
+	<div id="myModal" class="modal">
+		<button class="close">&times;</button>
+		<img class="modal-content" id="imgPlaceholder" />
+	</div>
+	<div id="overlay" onClick="overlayClick()"></div>
+    <script>
+		var pageNumber = 1;
+        function showPages(n) {
+        var i;
+        const slides = document.getElementsByClassName("page");
+        const dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {
+          pageNumber = 1;
+        }
+        if (n < 1) {
+          pageNumber = slides.length;
+        }
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[pageNumber - 1].style.display = "block";
+        dots[pageNumber - 1].className += " active";
+        }
+        function plusPage(n) {
+            showPages((pageNumber += n));
+        }
+        function currentPage(n) {
+            showPages((pageNumber = n));
+        }
+        currentPage(pageNumber);
+        var modal = document.getElementById("myModal");
+        var images = document.getElementsByClassName("modalImages");
+        var modalImg = document.getElementById("imgPlaceholder");
+        for (var i = 0; i < images.length; i++) {
+        var img = images[i];
+        img.onclick = function () {
+          modal.style.display = "block";
+          overlay.classList.add("active");
+          modalImg.src = this.src;
+        };
+        }
+        var closeBtn = document.getElementsByClassName("close")[0];
+        closeBtn.onclick = function () {
+            closeModal(modal);
+        };
+        var overlay = document.getElementById("overlay");
+        overlay.onclick = function () {
+            closeModal(modal);
+        };
+        function closeModal(modal) {
+            modal.style.display = "none";
+            overlay.classList.remove("active");
+        }
+	</script>
+	<!-- Credit to Bluebird for the save function -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script>
+        var save = function(){
+            html2canvas(document.body, {
+                onrendered: function(canvas){
+                    b64Img = canvas.toDataURL();
+                    window.top.postMessage(b64Img, "https://www.khanacademy.org/");
+                },
+                allowTaint: false,
+                useCORS: true,
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientWidth
+            });
+        };
+        var handleSave = function(e){
+            if(JSON.parse(e.data).screenshot){
+                window.setTimeout(function(){
+                    save();
+                }, 1000);
+            }
+        };
+        window.parent.savers = window.parent.savers || 0;
+        window.parent.addEventListener('message', handleSave);
+        window.parent.savers += 1;
+        for(window.parent.savers; window.parent.savers > 1; window.parent.savers -= 1){
+            window.parent.removeEventListener('message', handleSave);
+        }
+    </script>
+</body>
+</html>
